@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang='pt-BR'>
+<head>
+    <meta charset='utf-8'>
+    <title>To-do</title>
+    <script type="module">
+        //  const elCreateForm = document.querySelector("#elCreateForm")
+
+
+        function createItemElement(index, title) {
+            const clone = elItemTemplate.content.cloneNode(true)
+            const elTitle = clone.querySelector('span')
+            const elBtdelete = clone.querySelector('button')
+            elTitle.innerText = title
+            elBtdelete.dataset.index = index // abre uma brecha gigantesca pra hacking
+            elItemTemplate.parentElement.append(clone)
+        }
+
+        void async function loadAllItems() {
+            const request = await fetch("/todo")
+            const items = await request.json()
+            items.forEach((item, index) => createItemElement(index, item.title))
+        }();
+
+        elCreateForm.addEventListener('submit', async (ev) => {
+            ev.preventDefault()
+            const title = elCreateForm.elTitle.value
+            if (title.trim() === "") return
+            elCreateForm.fields.setAttribute('disabled', true)
+            const request = await fetch("/todo", {
+                method: "POST",
+                headers: { "content-type": "application/json"},
+                body: JSON.stringify({ title })
+
+            })
+            elCreateForm.fields.removeAttribute('disabled')
+            createItemElement(-1, title)
+            elCreateForm.elTitle.value = ''
+        })
+
+    </script>
+</head>
+<body>
+    
+    <form id="elCreateForm">
+        <fieldset name="fields">
+            <input name="elTitle">
+            <button name="elCreate">adicionar</button>
+        </fieldset>
+    </form>
+    <ul>
+        <template id="elItemTemplate">
+            <li>
+                <button>del</button>
+                <span>...</span>
+            </li>
+        </template>
+    </ul>
+
+</body>
+</html>

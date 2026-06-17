@@ -130,7 +130,7 @@
     </div>
     <div>
       <label for="request-body">Corpo</label>
-      <div id="request-body" style="height: 200px;"></div>
+      <textarea id="request-body"></textarea>
     </div>
     <div>
       <label>Error</label>
@@ -168,7 +168,7 @@
     const requestUrl = document.querySelector("#request-url")
     const requestMethod = document.querySelector("#request-method")
     const requestHeader = document.querySelector("#request-header")
-    const requestBody = applyEditor(document.querySelector("#request-body"))
+    const requestBody = (document.querySelector("#request-body"))
     const requestError = document.querySelector("#request-error")
     const btRequest = document.querySelector("#bt-request")
     // Elementos DOM para Response
@@ -177,8 +177,6 @@
     const responseStatusCode = document.querySelector("#response-status-code")
     const responseHeader = document.querySelector("#response-header")
     const responseBody = document.querySelector("#response-body")
-
-    console.log(requestBody)
 
     // Format Response Body
     function formatResponseBody(contentType, bodyText) {
@@ -198,9 +196,9 @@
           headers: requestHeader.value.trim() === ''
             ? undefined
             : JSON.parse(requestHeader.value),
-          body: requestBody.getValue().trim() === ''
+          body: requestBody.value.trim() === ''
             ? undefined
-            : requestBody.getValue()
+            : requestBody.value
         })
         //
         responsePath.textContent = response.url
