@@ -13,6 +13,19 @@
             const elBtdelete = clone.querySelector('button')
             elTitle.innerText = title
             elBtdelete.dataset.index = index // abre uma brecha gigantesca pra hacking
+            elBtdelete.addEventListener('click', async () => {
+            elBtdelete.setAttribute("disabled", true)
+            const request = await fetch(`/todo/${index}`, { 
+                method: "DELETE"
+            })
+            if (request.ok){
+               return elBtdelete.closest('li').remove(); }
+            
+            elBtdelete.removeAttribute("disabled")
+            const resp = await request.text()
+            alert(`erro: ${resp}`)
+
+            })
             elItemTemplate.parentElement.append(clone)
         }
 
@@ -31,10 +44,10 @@
                 method: "POST",
                 headers: { "content-type": "application/json"},
                 body: JSON.stringify({ title })
-
             })
+            const { index } = await request.json()
             elCreateForm.fields.removeAttribute('disabled')
-            createItemElement(-1, title)
+            createItemElement(index, title)
             elCreateForm.elTitle.value = ''
         })
 

@@ -32,10 +32,14 @@ class TodoList {
             throw "Item deve conter um título"
         items.push(item);
         await this.saveListToDisk();
+        return items.length - 1;
+
     }
 
     async removeItem(index: number) {
         const items = await this.items;
+        if(!items[index])
+            throw `item de index ${index} não existe`
         items.splice(index, 1);
         await this.saveListToDisk();
     }
